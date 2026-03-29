@@ -457,7 +457,7 @@
     ];
 
     // --- State ---
-    let currentQuestionIndex = 0;
+    let stopAllMusic(); currentQuestionIndex = 0;
     let isAnswering = false;
     let lifelines = { '5050': true, 'audience': true, 'phone': true };
     let safeHavenIndex = -1;
@@ -484,7 +484,7 @@
         let p = currentBg.play();
         if (p !== undefined) p.catch(e => console.log('Audio autoplay blocked'));
     }
-    function stopAllMusic() { if (currentBg) currentBg.pause(); } 
+    function stopAllMusic() { Object.values(sfx).forEach(a => { a.pause(); a.currentTime = 0; }); } 
 
     // --- DOM Elements ---
     const screens = {
@@ -529,7 +529,7 @@
     }
 
     function startGame() {
-        currentQuestionIndex = 0;
+        stopAllMusic(); currentQuestionIndex = 0;
         safeHavenIndex = -1;
         isAnswering = false;
         lifelines = { '5050': true, 'audience': true, 'phone': true };
@@ -578,7 +578,7 @@
         selectedBtn.classList.add('selected');
 
         setTimeout(() => {
-            selectedBtn.classList.remove('selected');
+            sfx.final.pause(); sfx.final.currentTime = 0; selectedBtn.classList.remove('selected');
             correctBtn.classList.add('correct');
             
             if (selectedIndex === q.correct) {
