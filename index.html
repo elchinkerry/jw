@@ -74,6 +74,7 @@
         }
 
         .menu-card::before {
+            pointer-events: none;
             content: '';
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -139,21 +140,21 @@
 
     <div class="menu-grid">
         <!-- Enfants -->
-        <a href="child.html" class="menu-card">
+        <a href="child.html" onclick="window.location.href='child.html'; return false;" style="cursor: pointer; z-index: 10;" class="menu-card">
             <div class="card-icon">🎈</div>
             <h2 class="card-title">Enfants</h2>
             <p class="card-desc">Des questions simples et amusantes pour les petits explorateurs.</p>
         </a>
 
         <!-- Standard -->
-        <a href="standard.html" class="menu-card">
+        <a href="standard.html" onclick="window.location.href='standard.html'; return false;" style="cursor: pointer; z-index: 10;" class="menu-card">
             <div class="card-icon">📜</div>
             <h2 class="card-title">Standard</h2>
             <p class="card-desc">Le défi classique ! Pour tous ceux qui aiment fouiller les Écritures.</p>
         </a>
 
         <!-- Expert -->
-        <a href="expert.html" class="menu-card">
+        <a href="expert.html" onclick="window.location.href='expert.html'; return false;" style="cursor: pointer; z-index: 10;" class="menu-card">
             <div class="card-icon">💎</div>
             <h2 class="card-title">Expert</h2>
             <p class="card-desc">Chronologie, prophéties et détails pointus. Réservé aux maîtres !</p>
