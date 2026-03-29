@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Centre de Jeux Bibliques</title>
+    <title>À la découverte des trésors bibliques - Menu Principal</title>
     <style>
         :root {
             --bg-color: #0B1B3D;
             --gold: #D4AF37;
             --gold-hover: #b5952f;
             --text-color: #ffffff;
+            --btn-bg: rgba(255, 255, 255, 0.1);
             --card-bg: rgba(0, 0, 0, 0.4);
         }
 
@@ -60,8 +61,8 @@
             background: var(--card-bg);
             border: 2px solid var(--gold);
             border-radius: 20px;
-            padding: 3rem 2rem;
-            width: 380px;
+            padding: 2.5rem 2rem;
+            width: 320px;
             text-decoration: none;
             color: var(--text-color);
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -70,18 +71,16 @@
             align-items: center;
             position: relative;
             overflow: hidden;
-            cursor: pointer;
-            z-index: 10;
         }
 
         .menu-card::before {
+            pointer-events: none;
             content: '';
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
             background: linear-gradient(135deg, rgba(212,175,55,0.2) 0%, rgba(0,0,0,0) 100%);
             opacity: 0;
             transition: opacity 0.4s ease;
-            pointer-events: none;
         }
 
         .menu-card:hover {
@@ -95,14 +94,14 @@
         }
 
         .card-icon {
-            font-size: 5rem;
+            font-size: 4rem;
             margin-bottom: 1.5rem;
             z-index: 1;
         }
 
         .card-title {
             color: var(--gold);
-            font-size: 2rem;
+            font-size: 1.8rem;
             margin-bottom: 1rem;
             z-index: 1;
             font-weight: bold;
@@ -113,13 +112,14 @@
         }
 
         .card-desc {
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: #ccc;
             line-height: 1.5;
             z-index: 1;
         }
 
-        @media (max-width: 768px) {
+        /* Responsive */
+        @media (max-width: 1024px) {
             .menu-grid {
                 flex-direction: column;
             }
@@ -135,22 +135,30 @@
 </head>
 <body>
 
-    <h1>Soirée Culte Familial</h1>
-    <p class="subtitle">Choisissez votre jeu biblique ci-dessous pour commencer !</p>
+    <h1>À la découverte des trésors bibliques</h1>
+    <p class="subtitle">Choisissez votre niveau d'aventure et testez vos connaissances de la Bible !</p>
+    <a href="../index.html" onclick="window.location.href='../index.html'; return false;" style="display:inline-block; margin-bottom: 2rem; background: transparent; border: 2px solid var(--gold); color: var(--gold); padding: 0.8rem 2rem; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 1.1rem; transition: all 0.3s; z-index: 10; cursor: pointer;">Retour à l'accueil principal</a>
 
     <div class="menu-grid">
-        <!-- Emoji Quiz -->
-        <a href="./emoji quiz/index.html" onclick="window.location.href='./emoji quiz/index.html'; return false;" class="menu-card">
-            <div class="card-icon">🤔❓</div>
-            <h2 class="card-title">Emoji Quiz</h2>
-            <p class="card-desc">Devinez les récits bibliques à travers des émojis ! Parfait pour toute la famille.</p>
+        <!-- Enfants -->
+        <a href="child.html" onclick="window.location.href='child.html'; return false;" style="cursor: pointer; z-index: 10;" class="menu-card">
+            <div class="card-icon">🎈</div>
+            <h2 class="card-title">Enfants</h2>
+            <p class="card-desc">Des questions simples et amusantes pour les petits explorateurs.</p>
         </a>
 
-        <!-- Millionaire -->
-        <a href="./bible-quiz/index.html" onclick="window.location.href='./bible-quiz/index.html'; return false;" class="menu-card">
-            <div class="card-icon">📺💰</div>
-            <h2 class="card-title">Qui veut être Pionnier ?</h2>
-            <p class="card-desc">Le célèbre jeu télévisé adapté sur la Bible. Trois niveaux de difficulté : Enfants, Standard et Expert.</p>
+        <!-- Standard -->
+        <a href="standard.html" onclick="window.location.href='standard.html'; return false;" style="cursor: pointer; z-index: 10;" class="menu-card">
+            <div class="card-icon">📜</div>
+            <h2 class="card-title">Standard</h2>
+            <p class="card-desc">Le défi classique ! Pour tous ceux qui aiment fouiller les Écritures.</p>
+        </a>
+
+        <!-- Expert -->
+        <a href="expert.html" onclick="window.location.href='expert.html'; return false;" style="cursor: pointer; z-index: 10;" class="menu-card">
+            <div class="card-icon">💎</div>
+            <h2 class="card-title">Expert</h2>
+            <p class="card-desc">Chronologie, prophéties et détails pointus. Réservé aux maîtres !</p>
         </a>
     </div>
 

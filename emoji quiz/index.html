@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Bible: Émojis</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --text: #334155;
+      --card: #ffffff;
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --correct: #22c55e;
+      --wrong: #ef4444;
+      --border: #e2e8f0;
+      --shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+      --radius: 20px;
+    }
+    
+    * { 
+      box-sizing: border-box; 
+      font-family: 'Inter', system-ui, -apple-system, sans-serif; 
+    }
+    
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 16px;
+    }
+    
+    .app-container {
+      background: var(--card);
+      width: 100%;
+      max-width: 480px;
+      padding: 32px 24px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      text-align: center;
+      position: relative;
+    }
+
+    .progress {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #94a3b8;
+      margin-bottom: 24px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+    
+    .emojis {
+      font-size: 3.5rem;
+      line-height: 1.3;
+      margin-bottom: 32px;
+      display: inline-block;
+      user-select: none;
+    }
+
+    .answers-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    button {
+      appearance: none;
+      border: 2px solid var(--border);
+      background: white;
+      color: var(--text);
+      font-size: 1.1rem;
+      font-weight: 600;
+      padding: 18px 16px;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      touch-action: manipulation;
+    }
+    
+    button:hover:not(:disabled) {
+      border-color: var(--primary);
+      background: #f8fafc;
+      transform: translateY(-2px);
+    }
+    
+    button:active:not(:disabled) {
+      transform: translateY(0px);
+    }
+    
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.8;
+    }
+
+    button.correct {
+      background: var(--correct);
+      border-color: var(--correct);
+      color: white;
+      transform: scale(1.02);
+      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+    }
+
+    button.wrong {
+      background: var(--wrong);
+      border-color: var(--wrong);
+      color: white;
+      animation: shake 0.4s;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+
+    .feedback-area {
+      margin-top: 24px;
+      min-height: 60px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .message {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--correct);
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: none;
+    }
+    
+    .message.show {
+      opacity: 1;
+      transform: translateY(0);
+      display: block;
+    }
+
+    .btn-next {
+      background: var(--primary);
+      color: white;
+      border: none;
+      width: 100%;
+      font-size: 1.2rem;
+      font-weight: 700;
+      padding: 18px;
+      border-radius: 14px;
+      display: none;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    }
+
+    .btn-next.show {
+      display: inline-block;
+      animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+    
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .game-over h2 {
+      font-size: 2.5rem;
+      color: var(--primary);
+      margin-bottom: 16px;
+    }
+    
+    .game-over p {
+      font-size: 1.2rem;
+      color: #64748b;
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+    
+    .restart-btn {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      width: 100%;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    }
+
+    @media (max-width: 400px) {
+      .emojis { font-size: 2.8rem; }
+      button { padding: 14px 12px; font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container" id="app">
+  <!-- Dynamic content will be injected here -->
+</div>
+
+<div style="text-align: center; margin-bottom: 2rem; position: relative; z-index: 10;">
+  <a href="../index.html" onclick="window.location.href='../index.html'; return false;" style="color: var(--primary); font-weight: bold; text-decoration: none; padding: 10px 20px; border: 2px solid var(--primary); border-radius: 20px; display: inline-block; transition: all 0.3s;">Retour à l'accueil principal</a>
+</div>
+
+<script>
+  const levels = [
+    { emojis: '👫 🌳 🍎 😳 💀 👗 👖', correct: 'Adam et Ève', wrongs: ['Ruth et Boaz', 'Aquila et Priscille', 'Abraham et Sara'] },
+    { emojis: '💪 ❤️ 💃 💇‍♂️ ⛓️ 👀', correct: 'Samson', wrongs: ['David', 'Achab', 'Jacob'] },
+    { emojis: '🏃 🚢 🐳 🙏 🌴 🏰 📣', correct: 'Jonas', wrongs: ['Paul', 'Pierre', 'Jean'] },
+    { emojis: '😭 ⛪ 🙏 🤰 🤱', correct: 'Anne (Hannah)', wrongs: ['Marie', 'Élisabeth', 'Sara'] },
+    { emojis: '🐑 🎼 🎸 🇮🇱 👑', correct: 'David', wrongs: ['Salomon', 'Saül', 'Asaph'] },
+    { emojis: '🏜️ 🙏 🐂 🔥 🌧️', correct: 'Élie', wrongs: ['Moïse', 'Aaron', 'Élisée'] },
+    { emojis: '🙇 👼 ⭐ 🐫 🎁', correct: 'Jésus (Les astrologues)', wrongs: ['Le roi Salomon', 'Joseph en Égypte', 'Jean le Baptiseur'] },
+    { emojis: '⛰️ 🧗 🔪 👤 🐑', correct: 'Isaac (et Abraham)', wrongs: ['Abel', 'Moïse', 'Jésus'] },
+    { emojis: '👱 🧔 💰 🍺 😫 🐖 🐖', correct: 'Le fils prodigue', wrongs: ['Le bon Samaritain', 'Lazare et le riche', 'Zachée'] },
+    { emojis: '🎣 🚣 🌊 🚶 😨', correct: 'Pierre', wrongs: ['Paul', 'Jésus', 'André'] },
+    { emojis: '🧔 🚢 🦒 🦒 🐓 🐓 🌧️ 🕊️ 🌈', correct: 'Noé', wrongs: ['Lot', 'Moïse', 'Jonas'] },
+    { emojis: '🇪🇬 🧺 🌊 🔥 🌳 ⚕️', correct: 'Moïse', wrongs: ['Joseph', 'Aaron', 'Josué'] },
+    { emojis: '👸 ✡️ 💀 🛑 🎉', correct: 'Esther', wrongs: ['Ruth', 'Jézabel', 'Sara'] },
+    { emojis: '🙏 🚫 📜 🦁 👑', correct: 'Daniel', wrongs: ['Samson', 'David', 'Ézéchiel'] },
+    { emojis: '👨‍👩‍👦 👱 🐑 🏹 🍲', correct: 'Ésaü', wrongs: ['Jacob', 'Ismaël', 'Joseph'] },
+    { emojis: '🇮🇱 👑 👷 🧱 🕍', correct: 'Néhémie', wrongs: ['Salomon', 'Esdras', 'Zorobabel'] },
+    { emojis: '🧔 👩 👱 🤕 4️⃣ ⚰️ 🚶', correct: 'Lazare', wrongs: ['Tabitha', 'Eutyche', 'La fille de Jaïre'] },
+    { emojis: '🥋 🌈 🕳️ 🇪🇬 💤 💭 👑', correct: 'Joseph', wrongs: ['Moïse', 'Daniel', 'Jacob'] },
+    { emojis: '👱 🛣️ ☀️ 👀 ❌', correct: 'Paul', wrongs: ['Pierre', 'Étienne', 'Barnabas'] },
+    { emojis: '🛌 👂 🗣️ 3️⃣ 🧎', correct: 'Samuel', wrongs: ['Jésus', 'David', 'Élie'] }
+  ];
+
+  let currentLevel = 0;
+  const app = document.getElementById('app');
+
+  function shuffle(array) {
+    let currentIndex = array.length, randomIndex;
+    while (currentIndex !== 0) {
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+      [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+    }
+    return array;
+  }
+
+  function renderLevel() {
+    if (currentLevel >= levels.length) {
+      renderGameOver();
+      return;
+    }
+
+    const levelData = levels[currentLevel];
+    const options = shuffle([levelData.correct, ...levelData.wrongs]);
+
+    const html = `
+      <div class="progress">${currentLevel + 1} / ${levels.length}</div>
+      <div class="emojis">${levelData.emojis}</div>
+      <div class="answers-grid" id="answers">
+        ${options.map(opt => `<button onclick="handleAnswer(this, '${opt.replace(/'/g, "\\'")}', '${levelData.correct.replace(/'/g, "\\'")}')">${opt}</button>`).join('')}
+      </div>
+      <div class="feedback-area">
+        <div class="message" id="message">Bravo ! 🎉</div>
+        <button class="btn-next" id="btnNext" onclick="nextLevel()">Suivant ➔</button>
+      </div>
+    `;
+    
+    app.innerHTML = html;
+  }
+
+  function handleAnswer(btn, selected, correct) {
+    const buttons = document.querySelectorAll('#answers button');
+    buttons.forEach(b => b.disabled = true); // Prevent multiple clicks
+
+    const messageEl = document.getElementById('message');
+    const nextBtnEl = document.getElementById('btnNext');
+
+    if (selected === correct) {
+      // ✅ Correct
+      btn.classList.add('correct');
+      messageEl.innerText = "Bravo ! 🎉";
+      messageEl.style.color = "var(--correct)";
+      messageEl.classList.add('show');
+      nextBtnEl.classList.add('show');
+    } else {
+      // ❌ Wrong
+      btn.classList.add('wrong');
+      
+      // Highlight the correct one
+      buttons.forEach(b => {
+        if (b.innerText === correct) {
+          b.classList.add('correct');
+        }
+      });
+      
+      setTimeout(() => {
+        messageEl.innerText = "Dommage ! 😅";
+        messageEl.style.color = "var(--wrong)";
+        messageEl.classList.add('show');
+        nextBtnEl.classList.add('show');
+      }, 400); // Small delay to let user see their wrong answer shake
+    }
+  }
+
+  function nextLevel() {
+    currentLevel++;
+    renderLevel();
+  }
+
+  function renderGameOver() {
+    app.innerHTML = `
+      <div class="game-over">
+        <h2>🎉 Victoire !</h2>
+        <p>Tu as terminé les 20 niveaux du Quiz Émojis de la Bible. Excellent boulot !</p>
+        <button class="restart-btn" onclick="restartGame()">Rejouer 🔄</button>
+      </div>
+    `;
+  }
+
+  function restartGame() {
+    currentLevel = 0;
+    renderLevel();
+  }
+
+  // Start the game
+  renderLevel();
+</script>
+
+</body>
+</html>
