@@ -460,6 +460,30 @@
         let lifelines = { '5050': true, 'audience': true, 'phone': true };
         let safeHavenIndex = -1;
 
+    const sfx = {
+        bg1: new Audio('sounds/bg_1.mp3'),
+        bg2: new Audio('sounds/bg_2.mp3'),
+        bg3: new Audio('sounds/bg_3.mp3'),
+        correct: new Audio('sounds/correct.mp3'),
+        wrong: new Audio('sounds/wrong.mp3'),
+        final: new Audio('sounds/final.mp3'),
+        ll5050: new Audio('sounds/5050.mp3'),
+        llAudience: new Audio('sounds/audience.mp3'),
+        llPhone: new Audio('sounds/phone.mp3')
+    };
+    
+    sfx.bg1.loop = true; sfx.bg2.loop = true; sfx.bg3.loop = true;
+    let currentBg = null;
+    function playBg(index) {
+        if (currentBg) { currentBg.pause(); currentBg.currentTime = 0; }
+        if (index < 5) currentBg = sfx.bg1;
+        else if (index < 10) currentBg = sfx.bg2;
+        else currentBg = sfx.bg3;
+        let p = currentBg.play();
+        if (p !== undefined) p.catch(e => console.log('Audio autoplay blocked'));
+    }
+    function stopAllMusic() { if (currentBg) currentBg.pause(); }
+
         // --- DOM Elements ---
         const screens = {
             start: document.getElementById('start-screen'),
@@ -513,14 +537,16 @@
             document.getElementById('ll-phone').disabled = false;
 
             initProgressBar();
-            renderQuestion();
+        playBg(0);
+        renderQuestion();
             showScreen('game');
         }
 
         function renderQuestion() {
             isAnswering = false;
-            updateProgressBar();
-            const q = questionsData[currentQuestionIndex];
+            if (!currentBg || currentBg.paused) playBg(currentQuestionIndex);
+        updateProgressBar();
+        const q = questionsData[currentQuestionIndex];
             questionText.textContent = q.q;
 
             answersContainer.innerHTML = '';
@@ -539,8 +565,9 @@
         function selectAnswer(selectedIndex) {
             if (isAnswering) return;
             isAnswering = true;
-
-            const q = questionsData[currentQuestionIndex];
+        stopAllMusic();
+        sfx.final.play();
+        const q = questionsData[currentQuestionIndex];
             const selectedBtn = document.getElementById(`btn-${selectedIndex}`);
             const correctBtn = document.getElementById(`btn-${q.correct}`);
 
@@ -553,6 +580,7 @@
                 correctBtn.classList.add('correct');
 
                 if (selectedIndex === q.correct) {
+                sfx.correct.play();
                     if (currentQuestionIndex === 4 || currentQuestionIndex === 9) {
                         safeHavenIndex = currentQuestionIndex;
                     }
@@ -564,9 +592,10 @@
                         } else {
                             endGame(true);
                         }
-                    }, 2000);
-                } else {
-                    selectedBtn.classList.add('wrong');
+                    }, 4000);
+            } else {
+                sfx.wrong.play();
+                selectedBtn.classList.add('wrong');
                     // Даем игроку 3.5 секунды (вместо 2.5), чтобы он успел выучить правильный (зеленый) ответ
                     setTimeout(() => {
                         endGame(false);
@@ -576,7 +605,8 @@
         }
 
         function endGame(isVictory) {
-            showScreen('end');
+            stopAllMusic();
+        showScreen('end');
             if (isVictory) {
                 document.getElementById('end-title').textContent = "Victoire ! 🏆";
                 document.getElementById('end-message').textContent = "Félicitations ! Vous avez découvert le trésor biblique ultime !";
@@ -608,11 +638,14 @@
             const q = questionsData[currentQuestionIndex];
 
             if (type === '5050') {
-                apply5050(q);
+            sfx.ll5050.play();
+            apply5050(q);
             } else if (type === 'audience') {
-                showAudiencePoll(q);
+            sfx.llAudience.play();
+            showAudiencePoll(q);
             } else if (type === 'phone') {
-                showFriendCall(q);
+            sfx.llPhone.play();
+            showFriendCall(q);
             }
         }
 
