@@ -199,29 +199,27 @@
   <!-- Dynamic content will be injected here -->
 </div>
 
-<div style="text-align: center; margin-bottom: 2rem; position: relative; z-index: 10;">
-  <a href="../index.html" onclick="window.location.href='../index.html'; return false;" style="color: var(--primary); font-weight: bold; text-decoration: none; padding: 10px 20px; border: 2px solid var(--primary); border-radius: 20px; display: inline-block; transition: all 0.3s;">Retour à l'accueil principal</a>
-</div>
+<a href="../index.html" onclick="window.location.href='../index.html'; return false;" style="position: absolute; top: 1rem; left: 1rem; color: var(--primary); font-weight: bold; text-decoration: none; padding: 8px 16px; border: 2px solid var(--primary); border-radius: 20px; transition: all 0.3s; z-index: 100; background: var(--card);">⬅ Menu</a>
 
 <script>
-  const levels = [
+    const levels = [
     { emojis: '👫 🌳 🍎 😳 💀 👗 👖', correct: 'Adam et Ève', wrongs: ['Ruth et Boaz', 'Aquila et Priscille', 'Abraham et Sara'] },
     { emojis: '💪 ❤️ 💃 💇‍♂️ ⛓️ 👀', correct: 'Samson', wrongs: ['David', 'Achab', 'Jacob'] },
-    { emojis: '🏃 🚢 🐳 🙏 🌴 🏰 📣', correct: 'Jonas', wrongs: ['Paul', 'Pierre', 'Jean'] },
-    { emojis: '😭 ⛪ 🙏 🤰 🤱', correct: 'Anne (Hannah)', wrongs: ['Marie', 'Élisabeth', 'Sara'] },
-    { emojis: '🐑 🎼 🎸 🇮🇱 👑', correct: 'David', wrongs: ['Salomon', 'Saül', 'Asaph'] },
+    { emojis: '🏃 🚢 🐟 🙏 🌴 🏙️ 📣', correct: 'Jonas', wrongs: ['Paul', 'Pierre', 'Jean'] },
+    { emojis: '😭 ⛺ 🙏 🤰 🤱', correct: 'Anne (Hannah)', wrongs: ['Marie', 'Élisabeth', 'Sara'] },
+    { emojis: '🐑 🎼 🎸 🛡️ ⚔️ 👑', correct: 'David', wrongs: ['Salomon', 'Saül', 'Asaph'] },
     { emojis: '🏜️ 🙏 🐂 🔥 🌧️', correct: 'Élie', wrongs: ['Moïse', 'Aaron', 'Élisée'] },
-    { emojis: '🙇 👼 ⭐ 🐫 🎁', correct: 'Jésus (Les astrologues)', wrongs: ['Le roi Salomon', 'Joseph en Égypte', 'Jean le Baptiseur'] },
+    { emojis: '🙇 🏠 🧒 ⭐ 🐫 🎁', correct: 'Jésus (Les astrologues)', wrongs: ['Le roi Salomon', 'Joseph en Égypte', 'Jean le Baptiseur'] },
     { emojis: '⛰️ 🧗 🔪 👤 🐑', correct: 'Isaac (et Abraham)', wrongs: ['Abel', 'Moïse', 'Jésus'] },
     { emojis: '👱 🧔 💰 🍺 😫 🐖 🐖', correct: 'Le fils prodigue', wrongs: ['Le bon Samaritain', 'Lazare et le riche', 'Zachée'] },
     { emojis: '🎣 🚣 🌊 🚶 😨', correct: 'Pierre', wrongs: ['Paul', 'Jésus', 'André'] },
     { emojis: '🧔 🚢 🦒 🦒 🐓 🐓 🌧️ 🕊️ 🌈', correct: 'Noé', wrongs: ['Lot', 'Moïse', 'Jonas'] },
-    { emojis: '🇪🇬 🧺 🌊 🔥 🌳 ⚕️', correct: 'Moïse', wrongs: ['Joseph', 'Aaron', 'Josué'] },
-    { emojis: '👸 ✡️ 💀 🛑 🎉', correct: 'Esther', wrongs: ['Ruth', 'Jézabel', 'Sara'] },
+    { emojis: '🇪🇬 🧺 🌊 🔥 🌳 🦯 🐍', correct: 'Moïse', wrongs: ['Joseph', 'Aaron', 'Josué'] },
+    { emojis: '👸 📜 💍 💀 🎉', correct: 'Esther', wrongs: ['Ruth', 'Jézabel', 'Sara'] },
     { emojis: '🙏 🚫 📜 🦁 👑', correct: 'Daniel', wrongs: ['Samson', 'David', 'Ézéchiel'] },
     { emojis: '👨‍👩‍👦 👱 🐑 🏹 🍲', correct: 'Ésaü', wrongs: ['Jacob', 'Ismaël', 'Joseph'] },
-    { emojis: '🇮🇱 👑 👷 🧱 🕍', correct: 'Néhémie', wrongs: ['Salomon', 'Esdras', 'Zorobabel'] },
-    { emojis: '🧔 👩 👱 🤕 4️⃣ ⚰️ 🚶', correct: 'Lazare', wrongs: ['Tabitha', 'Eutyche', 'La fille de Jaïre'] },
+    { emojis: '🛠️ 👑 👷 🧱 🚪', correct: 'Néhémie', wrongs: ['Salomon', 'Esdras', 'Zorobabel'] },
+    { emojis: '🧔 👩 👱 🤕 4️⃣ 🪨 🚶', correct: 'Lazare', wrongs: ['Tabitha', 'Eutyche', 'La fille de Jaïre'] },
     { emojis: '🥋 🌈 🕳️ 🇪🇬 💤 💭 👑', correct: 'Joseph', wrongs: ['Moïse', 'Daniel', 'Jacob'] },
     { emojis: '👱 🛣️ ☀️ 👀 ❌', correct: 'Paul', wrongs: ['Pierre', 'Étienne', 'Barnabas'] },
     { emojis: '🛌 👂 🗣️ 3️⃣ 🧎', correct: 'Samuel', wrongs: ['Jésus', 'David', 'Élie'] }
@@ -266,35 +264,23 @@
 
   function handleAnswer(btn, selected, correct) {
     const buttons = document.querySelectorAll('#answers button');
-    buttons.forEach(b => b.disabled = true); // Prevent multiple clicks
-
+    
     const messageEl = document.getElementById('message');
     const nextBtnEl = document.getElementById('btnNext');
 
     if (selected === correct) {
-      // ✅ Correct
+      buttons.forEach(b => b.disabled = true);
       btn.classList.add('correct');
       messageEl.innerText = "Bravo ! 🎉";
       messageEl.style.color = "var(--correct)";
       messageEl.classList.add('show');
       nextBtnEl.classList.add('show');
     } else {
-      // ❌ Wrong
       btn.classList.add('wrong');
-      
-      // Highlight the correct one
-      buttons.forEach(b => {
-        if (b.innerText === correct) {
-          b.classList.add('correct');
-        }
-      });
-      
-      setTimeout(() => {
-        messageEl.innerText = "Dommage ! 😅";
-        messageEl.style.color = "var(--wrong)";
-        messageEl.classList.add('show');
-        nextBtnEl.classList.add('show');
-      }, 400); // Small delay to let user see their wrong answer shake
+      btn.disabled = true; // only disable the wrong one
+      messageEl.innerText = "Essaie encore ! 😅";
+      messageEl.style.color = "var(--wrong)";
+      messageEl.classList.add('show');
     }
   }
 
