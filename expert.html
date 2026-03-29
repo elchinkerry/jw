@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>À la découverte des trésors bibliques (Expert)</title>
+    <style>
+        :root {
+            --bg-color: #0B1B3D;
+            --gold: #D4AF37;
+            --gold-hover: #b5952f;
+            --text-color: #ffffff;
+            --btn-bg: rgba(255, 255, 255, 0.1);
+            --correct-bg: #28a745;
+            --wrong-bg: #dc3545;
+            --selected-bg: #ffc107;
+            --safe-color: #17a2b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Screens */
+        .screen {
+            display: none;
+            flex: 1;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        h1 {
+            color: var(--gold);
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: #fff;
+            display: block;
+            margin-top: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .btn {
+            background-color: var(--gold);
+            color: var(--bg-color);
+            border: none;
+            padding: 1rem 2.5rem;
+            font-size: 1.25rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        .btn:hover {
+            background-color: var(--gold-hover);
+            transform: translateY(-2px);
+        }
+
+        /* Main Game Layout */
+        .game-layout {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            max-width: 1200px;
+            gap: 2rem;
+            padding: 1rem;
+        }
+
+        .main-area {
+            flex: 3;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .sidebar {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column-reverse; /* Bottom to top */
+            justify-content: space-between;
+            border: 2px solid var(--gold);
+            max-height: 80vh;
+        }
+
+        .step {
+            padding: 0.5rem 1rem;
+            margin: 0.2rem 0;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            color: #aaa;
+            transition: all 0.3s ease;
+        }
+
+        .step.safe {
+            color: var(--text-color);
+        }
+
+        .step.current {
+            background-color: var(--gold);
+            color: var(--bg-color);
+            transform: scale(1.05);
+            box-shadow: 0 0 10px var(--gold);
+        }
+
+        .step.passed {
+            color: var(--gold);
+        }
+
+        /* Lifelines */
+        .lifelines {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .lifeline-btn {
+            background: var(--bg-color);
+            border: 2px solid var(--gold);
+            color: var(--gold);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .lifeline-btn:hover:not(:disabled) {
+            background: var(--gold);
+            color: var(--bg-color);
+            box-shadow: 0 0 15px var(--gold);
+        }
+
+        .lifeline-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            border-color: #555;
+            color: #555;
+        }
+        
+        .lifeline-btn:disabled::after {
+            content: '❌';
+            position: absolute;
+            font-size: 2rem;
+            color: red;
+            opacity: 0.8;
+        }
+
+        /* Question & Answers */
+        .question-box {
+            background: rgba(0, 0, 0, 0.4);
+            border: 2px solid var(--gold);
+            border-radius: 15px;
+            padding: 2rem;
+            font-size: 1.4rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .answers-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .answer-btn {
+            background: var(--btn-bg);
+            border: 2px solid var(--gold);
+            color: var(--text-color);
+            padding: 1.5rem;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .answer-btn:hover:not(:disabled) {
+            background: rgba(212, 175, 55, 0.2);
+            box-shadow: inset 0 0 10px var(--gold);
+        }
+
+        .answer-btn.selected {
+            background: var(--selected-bg) !important;
+            color: #000;
+            border-color: var(--selected-bg);
+        }
+
+        .answer-btn.correct {
+            background: var(--correct-bg) !important;
+            color: #fff;
+            border-color: var(--correct-bg);
+        }
+
+        .answer-btn.wrong {
+            background: var(--wrong-bg) !important;
+            color: #fff;
+            border-color: var(--wrong-bg);
+        }
+
+        .answer-letter {
+            color: var(--gold);
+            font-weight: bold;
+            margin-right: 1rem;
+        }
+        
+        .selected .answer-letter, .correct .answer-letter, .wrong .answer-letter {
+            color: inherit;
+        }
+
+        /* Modals */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-color);
+            border: 2px solid var(--gold);
+            border-radius: 15px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+        }
+
+        .modal-content h2 {
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Bar chart */
+        .chart-container {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            height: 200px;
+            margin: 2rem 0;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--gold);
+            position: relative;
+        }
+        
+        .bar-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 20%;
+        }
+        
+        .bar {
+            width: 100%;
+            background: var(--gold);
+            border-radius: 4px 4px 0 0;
+            transition: height 1s ease-out;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        
+        .bar-label {
+            margin-top: 10px;
+            font-weight: bold;
+            color: var(--gold);
+        }
+        
+        .bar-value {
+            position: relative;
+            top: -25px;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .close-btn {
+            background: var(--btn-bg);
+            border: 1px solid var(--gold);
+            color: var(--text-color);
+            padding: 0.5rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .close-btn:hover {
+            background: var(--gold);
+            color: var(--bg-color);
+        }
+
+        #friend-message {
+            font-style: italic;
+            font-size: 1.2rem;
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.05);
+            border-left: 4px solid var(--gold);
+            border-radius: 4px;
+            margin: 1.5rem 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .game-layout {
+                flex-direction: column;
+            }
+            .sidebar {
+                flex-direction: row;
+                flex-wrap: wrap;
+                max-height: none;
+                padding: 1rem;
+            }
+            .step {
+                font-size: 0.8rem;
+                padding: 0.3rem 0.5rem;
+            }
+            .answers-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Start Screen -->
+    <div id="start-screen" class="screen active">
+        <h1>
+            À la découverte des trésors bibliques
+            <span class="subtitle">Niveau Expert 💎</span>
+        </h1>
+        <button class="btn" onclick="startGame()">Relever le défi</button>
+    </div>
+
+    <!-- Main Game Screen -->
+    <div id="game-screen" class="screen">
+        <div class="game-layout">
+            <div class="main-area">
+                <div class="lifelines">
+                    <button id="ll-5050" class="lifeline-btn" title="50/50" onclick="useLifeline('5050')">50:50</button>
+                    <button id="ll-audience" class="lifeline-btn" title="Avis du public" onclick="useLifeline('audience')">👥</button>
+                    <button id="ll-phone" class="lifeline-btn" title="Appel à un ami" onclick="useLifeline('phone')">📞</button>
+                </div>
+
+                <div id="question-text" class="question-box">
+                    Question text goes here...
+                </div>
+
+                <div class="answers-grid" id="answers-container">
+                    <!-- Answers generated via JS -->
+                </div>
+            </div>
+            
+            <div class="sidebar" id="progress-bar">
+                <!-- Steps generated via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- End Screen -->
+    <div id="end-screen" class="screen">
+        <h1 id="end-title">Game Over</h1>
+        <h2 id="end-message" style="margin-bottom: 2rem; color: #fff;"></h2>
+        <button class="btn" onclick="restartGame()">Rejouer 🔄</button>
+    </div>
+
+    <!-- Modals -->
+    <div id="modal-container" class="modal-overlay">
+        <div class="modal-content">
+            <h2 id="modal-title">Modal Title</h2>
+            <div id="modal-body"></div>
+            <button class="close-btn" onclick="closeModal()">Fermer</button>
+        </div>
+    </div>
+
+<script>
+    // --- Data ---
+    const questionsData = [
+        // Level 1: (1-5)
+        { q: "Quel prophète a déchiré son vêtement en 12 morceaux pour en donner 10 à Jéroboam ?", options: ["Élie", "Ahiya", "Samuel", "Natan"], correct: 1 },
+        { q: "Dans le tabernacle, quel était le seul meuble qui se trouvait dans le Très-Saint ?", options: ["L'autel de l'encens", "Le grand candélabre", "L'arche de l'alliance", "La table des pains de proposition"], correct: 2 },
+        { q: "Quel roi de Juda a eu les yeux crevés par Nabuchodonosor après avoir vu ses propres fils être tués ?", options: ["Jojakin", "Sédécias", "Jojakim", "Manassé"], correct: 1 },
+        { q: "Dans quelle vallée David a-t-il affronté et vaincu le géant Goliath ?", options: ["La vallée de l'Arnon", "La vallée de Hinnom", "La vallée d'Éla", "La vallée du Jourdain"], correct: 2 },
+        { q: "Selon Proverbes 30, lequel de ces animaux NE FAIT PAS partie des quatre choses « parmi les plus petites de la terre, mais qui sont sages d'instinct » ?", options: ["Les fourmis", "Les damans", "Les sauterelles", "Les scorpions"], correct: 3 },
+        
+        // Level 2: (6-10)
+        { q: "Comment s'appelait la servante qui a reconnu la voix de l'apôtre Pierre à la porte, mais qui, folle de joie, a oublié de lui ouvrir ?", options: ["Lydie", "Rhode", "Dorkas", "Chloé"], correct: 1 },
+        { q: "Que signifie exactement le nom « Melchisédek » selon l'explication de l'apôtre Paul dans la lettre aux Hébreux ?", options: ["Roi de paix", "Roi de justice", "Prêtre du Très-Haut", "Père de la multitude"], correct: 1 },
+        { q: "En quelle année le deuxième temple de Jérusalem a-t-il été détruit par les armées romaines ?", options: ["33 de n. è.", "70 de n. è.", "607 av. n. è.", "1914 de n. è."], correct: 1 },
+        { q: "Dans l'édition révisée de la Traduction du monde nouveau (2018 en français), par quelle expression plus précise a été remplacé le terme « bonté de cœur » ?", options: ["Miséricorde absolue", "Amour fidèle", "Grâce divine", "Compassion tendre"], correct: 1 },
+        { q: "Selon les paroles de Paul en Actes 13, combien de temps environ a duré la période des juges en Israël avant l'arrivée des rois ?", options: ["350 ans", "400 ans", "450 ans", "500 ans"], correct: 2 },
+        
+        // Level 3: (11-15)
+        { q: "Lequel des guerriers puissants de David a tué un Égyptien « d'une taille extraordinaire » en utilisant seulement un bâton pour lui arracher sa propre lance ?", options: ["Abishaï", "Benaïa", "Joab", "Éléazar"], correct: 1 },
+        { q: "Dans le rêve de Nabuchodonosor concernant l'immense statue, de quoi étaient composés les pieds ?", options: ["De fer pur", "D'argile pure", "De fer mêlé à de l'argile", "De cuivre et de fer"], correct: 2 },
+        { q: "Comment s'appelait l'officier de l'armée romaine (le centurion) du bataillon d'Auguste qui était chargé d'escorter l'apôtre Paul jusqu'à Rome ?", options: ["Corneille", "Julius", "Claudius Lysias", "Festus"], correct: 1 },
+        { q: "Dans le livre de la Révélation, la muraille de la Nouvelle Jérusalem possède 12 fondations ornées de pierres précieuses. Quelle est la douzième pierre ?", options: ["Le jaspe", "Le saphir", "L'améthyste", "L'émeraude"], correct: 2 },
+        { q: "Quel est le tout dernier mot de la Bible dans la Traduction du monde nouveau (en français) ?", options: ["Jéhovah", "Amen", "Saints", "Terre"], correct: 1 }
+    ];
+
+    const rewards = [
+        "1", "2", "3", "4", "5 (Palier)", 
+        "6", "7", "8", "9", "10 (Palier)", 
+        "11", "12", "13", "14", "15 (Trésor Expert 👑)"
+    ];
+
+    // --- State ---
+    let currentQuestionIndex = 0;
+    let isAnswering = false;
+    let lifelines = { '5050': true, 'audience': true, 'phone': true };
+    let safeHavenIndex = -1; 
+
+    // --- DOM Elements ---
+    const screens = {
+        start: document.getElementById('start-screen'),
+        game: document.getElementById('game-screen'),
+        end: document.getElementById('end-screen')
+    };
+    const questionText = document.getElementById('question-text');
+    const answersContainer = document.getElementById('answers-container');
+    const progressBar = document.getElementById('progress-bar');
+    const modalContainer = document.getElementById('modal-container');
+    
+    // --- Logic ---
+    function showScreen(screenName) {
+        Object.values(screens).forEach(s => s.classList.remove('active'));
+        screens[screenName].classList.add('active');
+    }
+
+    function initProgressBar() {
+        progressBar.innerHTML = '';
+        for (let i = rewards.length - 1; i >= 0; i--) {
+            const div = document.createElement('div');
+            div.className = 'step';
+            div.id = `step-${i}`;
+            if (i === 4 || i === 9 || i === 14) div.classList.add('safe');
+            
+            div.innerHTML = `<span>${i + 1}</span> <span>${rewards[i]}</span>`;
+            progressBar.appendChild(div);
+        }
+    }
+
+    function updateProgressBar() {
+        for (let i = 0; i < rewards.length; i++) {
+            const el = document.getElementById(`step-${i}`);
+            el.classList.remove('current', 'passed');
+            if (i < currentQuestionIndex) {
+                el.classList.add('passed');
+            } else if (i === currentQuestionIndex) {
+                el.classList.add('current');
+            }
+        }
+    }
+
+    function startGame() {
+        currentQuestionIndex = 0;
+        safeHavenIndex = -1;
+        isAnswering = false;
+        lifelines = { '5050': true, 'audience': true, 'phone': true };
+        
+        document.getElementById('ll-5050').disabled = false;
+        document.getElementById('ll-audience').disabled = false;
+        document.getElementById('ll-phone').disabled = false;
+
+        initProgressBar();
+        renderQuestion();
+        showScreen('game');
+    }
+
+    function renderQuestion() {
+        isAnswering = false;
+        updateProgressBar();
+        const q = questionsData[currentQuestionIndex];
+        questionText.textContent = q.q;
+        
+        answersContainer.innerHTML = '';
+        const letters = ['A', 'B', 'C', 'D'];
+        
+        q.options.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'answer-btn';
+            btn.id = `btn-${idx}`;
+            btn.innerHTML = `<span class="answer-letter">${letters[idx]}:</span> ${opt}`;
+            btn.onclick = () => selectAnswer(idx);
+            answersContainer.appendChild(btn);
+        });
+    }
+
+    function selectAnswer(selectedIndex) {
+        if (isAnswering) return;
+        isAnswering = true;
+        
+        const q = questionsData[currentQuestionIndex];
+        const selectedBtn = document.getElementById(`btn-${selectedIndex}`);
+        const correctBtn = document.getElementById(`btn-${q.correct}`);
+
+        document.querySelectorAll('.answer-btn').forEach(b => b.disabled = true);
+        
+        selectedBtn.classList.add('selected');
+
+        setTimeout(() => {
+            selectedBtn.classList.remove('selected');
+            correctBtn.classList.add('correct');
+            
+            if (selectedIndex === q.correct) {
+                if (currentQuestionIndex === 4 || currentQuestionIndex === 9) {
+                    safeHavenIndex = currentQuestionIndex;
+                }
+                
+                setTimeout(() => {
+                    currentQuestionIndex++;
+                    if (currentQuestionIndex < questionsData.length) {
+                        renderQuestion();
+                    } else {
+                        endGame(true);
+                    }
+                }, 2000);
+            } else {
+                selectedBtn.classList.add('wrong');
+                setTimeout(() => {
+                    endGame(false);
+                }, 2500);
+            }
+        }, 2000);
+    }
+
+    function endGame(isVictory) {
+        showScreen('end');
+        if (isVictory) {
+            document.getElementById('end-title').textContent = "Impressionnant ! 👑";
+            document.getElementById('end-message').textContent = "Une connaissance prodigieuse des Écritures ! Félicitations !";
+            document.getElementById('end-title').style.color = "var(--correct-bg)";
+        } else {
+            document.getElementById('end-title').textContent = "Game Over !";
+            document.getElementById('end-title').style.color = "var(--wrong-bg)";
+            let text = "Les questions étaient corsées, mais quelle belle révision !";
+            if (safeHavenIndex >= 0) {
+                text += `\nAu moins, vous avez sauvé l'honneur au palier ${safeHavenIndex + 1}.`;
+            } else {
+                text += "\nOn ne lâche rien, on replonge dans la Bible et on réessaie !";
+            }
+            document.getElementById('end-message').innerText = text;
+        }
+    }
+
+    function restartGame() {
+        startGame();
+    }
+
+    // --- Lifelines ---
+    function useLifeline(type) {
+        if (!lifelines[type] || isAnswering) return;
+        
+        lifelines[type] = false;
+        document.getElementById(`ll-${type}`).disabled = true;
+
+        const q = questionsData[currentQuestionIndex];
+
+        if (type === '5050') {
+            apply5050(q);
+        } else if (type === 'audience') {
+            showAudiencePoll(q);
+        } else if (type === 'phone') {
+            showFriendCall(q);
+        }
+    }
+
+    function apply5050(q) {
+        let wrongIndices = [0, 1, 2, 3].filter(i => i !== q.correct);
+        wrongIndices.sort(() => Math.random() - 0.5);
+        let toHide = wrongIndices.slice(0, 2);
+        
+        toHide.forEach(idx => {
+            const btn = document.getElementById(`btn-${idx}`);
+            btn.innerHTML = '';
+            btn.disabled = true;
+            btn.style.cursor = 'default';
+            btn.style.background = 'transparent';
+            btn.style.borderColor = 'transparent';
+        });
+    }
+
+    function showAudiencePoll(q) {
+        document.getElementById('modal-title').textContent = "L'avis d'un érudit 👥";
+        
+        let values = [0,0,0,0];
+        let remaining = 100;
+        
+        const correctVal = Math.floor(Math.random() * 41) + 40; // 40-80%
+        values[q.correct] = correctVal;
+        remaining -= correctVal;
+        
+        const others = [0,1,2,3].filter(i => i !== q.correct);
+        others.forEach((idx, i) => {
+            if (i === 2) {
+                values[idx] = remaining;
+            } else {
+                const val = Math.floor(Math.random() * (remaining * 0.7));
+                values[idx] = val;
+                remaining -= val;
+            }
+        });
+
+        const letters = ['A', 'B', 'C', 'D'];
+        
+        let html = '<div class="chart-container">';
+        values.forEach((val, idx) => {
+            const btn = document.getElementById(`btn-${idx}`);
+            if (btn && btn.disabled && btn.innerHTML === '') {
+                val = 0; // Was eliminated by 50:50
+            }
+            html += `
+                <div class="bar-wrapper">
+                    <div class="bar-value">${val}%</div>
+                    <div class="bar" style="height: ${val}%"></div>
+                    <div class="bar-label">${letters[idx]}</div>
+                </div>
+            `;
+        });
+        html += '</div>';
+
+        document.getElementById('modal-body').innerHTML = html;
+        modalContainer.classList.add('active');
+    }
+
+    function showFriendCall(q) {
+        document.getElementById('modal-title').textContent = "Appel à un expert 📞";
+        const letters = ['A', 'B', 'C', 'D'];
+        
+        const confidence = Math.random() > 0.3 ? "Si mes recherches sont bonnes, c'est" : "D'après la chronologie, ça doit être";
+        
+        document.getElementById('modal-body').innerHTML = `
+            <div id="friend-message">
+                "Salut ! Question intéressante... ${confidence} la réponse <strong>${letters[q.correct]}</strong>."
+            </div>
+        `;
+        modalContainer.classList.add('active');
+    }
+
+    function closeModal() {
+        modalContainer.classList.remove('active');
+    }
+
+</script>
+</body>
+</html>

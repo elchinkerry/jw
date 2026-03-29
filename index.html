@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>À la découverte des trésors bibliques - Menu Principal</title>
+    <style>
+        :root {
+            --bg-color: #0B1B3D;
+            --gold: #D4AF37;
+            --gold-hover: #b5952f;
+            --text-color: #ffffff;
+            --btn-bg: rgba(255, 255, 255, 0.1);
+            --card-bg: rgba(0, 0, 0, 0.4);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            text-align: center;
+            background-image: radial-gradient(circle at center, #112d60 0%, #0B1B3D 100%);
+        }
+
+        h1 {
+            color: var(--gold);
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.6);
+            line-height: 1.2;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: #ddd;
+            margin-bottom: 3rem;
+            max-width: 600px;
+        }
+
+        .menu-grid {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 1200px;
+        }
+
+        .menu-card {
+            background: var(--card-bg);
+            border: 2px solid var(--gold);
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            width: 320px;
+            text-decoration: none;
+            color: var(--text-color);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(135deg, rgba(212,175,55,0.2) 0%, rgba(0,0,0,0) 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.5), 0 0 20px rgba(212,175,55,0.3);
+            border-color: #fff;
+        }
+
+        .menu-card:hover::before {
+            opacity: 1;
+        }
+
+        .card-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            z-index: 1;
+        }
+
+        .card-title {
+            color: var(--gold);
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            z-index: 1;
+            font-weight: bold;
+        }
+
+        .menu-card:hover .card-title {
+            color: #fff;
+        }
+
+        .card-desc {
+            font-size: 1rem;
+            color: #ccc;
+            line-height: 1.5;
+            z-index: 1;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .menu-grid {
+                flex-direction: column;
+            }
+            .menu-card {
+                width: 100%;
+                max-width: 400px;
+            }
+            h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>À la découverte des trésors bibliques</h1>
+    <p class="subtitle">Choisissez votre niveau d'aventure et testez vos connaissances de la Bible !</p>
+
+    <div class="menu-grid">
+        <!-- Enfants -->
+        <a href="child.html" class="menu-card">
+            <div class="card-icon">🎈</div>
+            <h2 class="card-title">Enfants</h2>
+            <p class="card-desc">Des questions simples et amusantes pour les petits explorateurs.</p>
+        </a>
+
+        <!-- Standard -->
+        <a href="standard.html" class="menu-card">
+            <div class="card-icon">📜</div>
+            <h2 class="card-title">Standard</h2>
+            <p class="card-desc">Le défi classique ! Pour tous ceux qui aiment fouiller les Écritures.</p>
+        </a>
+
+        <!-- Expert -->
+        <a href="expert.html" class="menu-card">
+            <div class="card-icon">💎</div>
+            <h2 class="card-title">Expert</h2>
+            <p class="card-desc">Chronologie, prophéties et détails pointus. Réservé aux maîtres !</p>
+        </a>
+    </div>
+
+</body>
+</html>
